@@ -17,6 +17,7 @@ import { tool as etaCalculator } from './eta-calculator';
 import { tool as gitMemo } from './git-memo';
 import { tool as hashText } from './hash-text';
 import { tool as htmlEntities } from './html-entities';
+import { tool as httpStatusCodes } from './http-status-codes';
 import { tool as baseConverter } from './integer-base-converter';
 import { tool as jsonViewer } from './json-viewer';
 import { tool as loremIpsumGenerator } from './lorem-ipsum-generator';
@@ -53,7 +54,15 @@ export const toolsByCategory: ToolCategory[] = [
   {
     name: 'Web',
     icon: LockOpen,
-    components: [urlEncoder, htmlEntities, qrCodeGenerator, urlParser, deviceInformation, basicAuthGenerator],
+    components: [
+      urlEncoder,
+      htmlEntities,
+      qrCodeGenerator,
+      urlParser,
+      deviceInformation,
+      basicAuthGenerator,
+      httpStatusCodes,
+    ],
   },
   {
     name: 'Development',
