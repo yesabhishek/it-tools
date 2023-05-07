@@ -1,10 +1,8 @@
 <template>
   <div>
-    <n-form-item label="An ipv4 address:" v-bind="validationAttrs">
-      <n-input v-model:value="rawIpAddress" placeholder="An ipv4 address..." />
-    </n-form-item>
+    <c-input-text v-model:value="rawIpAddress" label="The ipv4 address:" placeholder="The ipv4 address..." readonly />
 
-    <n-divider style="margin-top: 0" mt-0 />
+    <n-divider />
 
     <n-form-item
       v-for="{ label, value } of convertedSections"

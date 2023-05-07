@@ -2,14 +2,7 @@
   <c-card title="Hash">
     <n-form label-width="120">
       <n-form-item label="Your string: " label-placement="left">
-        <n-input
-          v-model:value="input"
-          placeholder="Your string to bcrypt..."
-          autocomplete="off"
-          autocorrect="off"
-          autocapitalize="off"
-          spellcheck="false"
-        />
+        <c-input-text v-model:value="input" placeholder="Your string to bcrypt..." raw-text />
       </n-form-item>
       <n-form-item label="Salt count: " label-placement="left">
         <n-input-number v-model:value="saltCount" placeholder="Salt rounds..." :max="10" :min="0" w-full />
@@ -24,24 +17,10 @@
   <c-card title="Compare string with hash">
     <n-form label-width="120">
       <n-form-item label="Your string: " label-placement="left">
-        <n-input
-          v-model:value="compareString"
-          placeholder="Your string to compare..."
-          autocomplete="off"
-          autocorrect="off"
-          autocapitalize="off"
-          spellcheck="false"
-        />
+        <c-input-text v-model:value="compareString" placeholder="Your string to compare..." raw-text />
       </n-form-item>
       <n-form-item label="Your hash: " label-placement="left">
-        <n-input
-          v-model:value="compareHash"
-          placeholder="Your hahs to compare..."
-          autocomplete="off"
-          autocorrect="off"
-          autocapitalize="off"
-          spellcheck="false"
-        />
+        <c-input-text v-model:value="compareHash" placeholder="Your hahs to compare..." raw-text />
       </n-form-item>
       <n-form-item label="Do they match ? " label-placement="left" :show-feedback="false">
         <div class="compare-result" :class="{ positive: compareMatch }">

@@ -1,10 +1,14 @@
 <template>
   <c-card>
-    <n-form-item label="Your url to parse:" :feedback="validation.message" :validation-status="validation.status">
-      <n-input v-model:value="urlToParse" placeholder="Your url to parse..." />
-    </n-form-item>
+    <c-input-text
+      v-model:value="urlToParse"
+      label="Your url to parse:"
+      placeholder="Your url to parse..."
+      raw-text
+      :validation-rules="urlValidationRules"
+    />
 
-    <n-divider style="margin-top: 0" />
+    <n-divider />
 
     <n-form>
       <n-input-group v-for="{ title, key } in properties" :key="key">
@@ -27,7 +31,6 @@
 </template>
 
 <script setup lang="ts">
-import { useValidation } from '@/composable/validation';
 import { isNotThrowing } from '@/utils/boolean';
 import { withDefaultOnError } from '@/utils/defaults';
 import { SubdirectoryArrowRightRound } from '@vicons/material';
@@ -37,15 +40,12 @@ import InputCopyable from '../../components/InputCopyable.vue';
 const urlToParse = ref('https://me:pwd@it-tools.tech:3000/url-parser?key1=value&key2=value2#the-hash');
 
 const urlParsed = computed(() => withDefaultOnError(() => new URL(urlToParse.value), undefined));
-const validation = useValidation({
-  source: urlToParse,
-  rules: [
-    {
-      validator: (value) => isNotThrowing(() => new URL(value)),
-      message: 'Invalid url',
-    },
-  ],
-});
+const urlValidationRules = [
+  {
+    validator: (value: string) => isNotThrowing(() => new URL(value)),
+    message: 'Invalid url',
+  },
+];
 
 const properties: { title: string; key: keyof URL }[] = [
   { title: 'Protocol', key: 'protocol' },
