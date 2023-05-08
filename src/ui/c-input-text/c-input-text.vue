@@ -2,31 +2,32 @@
   <div class="c-input-text" :class="{ disabled, error: !validation.isValid, 'label-left': labelPosition === 'left' }">
     <label v-if="label" :for="id" class="label"> {{ label }} </label>
 
-    <div class="input-wrapper">
-      <slot name="prefix" />
+    <div class="feedback-wrapper">
+      <div class="input-wrapper">
+        <slot name="prefix" />
 
-      <input
-        :id="id"
-        v-model="value"
-        type="text"
-        class="input"
-        :placeholder="placeholder"
-        :readonly="readonly"
-        :disabled="disabled"
-        :data-test-id="testId"
-        :autocapitalize="autocapitalize ?? (rawText ? 'off' : undefined)"
-        :autocomplete="autocomplete ?? (rawText ? 'off' : undefined)"
-        :autocorrect="autocorrect ?? (rawText ? 'off' : undefined)"
-        :spellcheck="spellcheck ?? (rawText ? false : undefined)"
-      />
+        <input
+          :id="id"
+          v-model="value"
+          type="text"
+          class="input"
+          :placeholder="placeholder"
+          :readonly="readonly"
+          :disabled="disabled"
+          :data-test-id="testId"
+          :autocapitalize="autocapitalize ?? (rawText ? 'off' : undefined)"
+          :autocomplete="autocomplete ?? (rawText ? 'off' : undefined)"
+          :autocorrect="autocorrect ?? (rawText ? 'off' : undefined)"
+          :spellcheck="spellcheck ?? (rawText ? false : undefined)"
+        />
 
-      <c-button v-if="clearable && value" variant="text" circle size="small" @click="value = ''">
-        <icon-mdi-close />
-      </c-button>
-      <slot name="suffix" />
+        <c-button v-if="clearable && value" variant="text" circle size="small" @click="value = ''">
+          <icon-mdi-close />
+        </c-button>
+        <slot name="suffix" />
+      </div>
+      <span v-if="!validation.isValid" class="feedback"> {{ validation.message }} </span>
     </div>
-
-    <span v-if="!validation.isValid" class="feedback"> {{ validation.message }} </span>
   </div>
 </template>
 
@@ -45,6 +46,7 @@ const props = withDefaults(
     readonly?: boolean;
     disabled?: boolean;
     validationRules?: UseValidationRule<string>[];
+    validation?: ReturnType<typeof useValidation>;
     labelPosition?: 'top' | 'left';
     labelWidth?: string;
     labelAlign?: 'left' | 'right';
@@ -64,6 +66,7 @@ const props = withDefaults(
     readonly: false,
     disabled: false,
     validationRules: () => [],
+    validation: undefined,
     labelPosition: 'top',
     labelWidth: 'auto',
     labelAlign: 'left',
@@ -81,10 +84,12 @@ const value = useVModel(props, 'value', emit);
 
 const { id, placeholder, label, validationRules, labelPosition, labelWidth, labelAlign } = toRefs(props);
 
-const validation = useValidation({
-  rules: validationRules,
-  source: value,
-});
+const validation =
+  props.validation ??
+  useValidation({
+    rules: validationRules,
+    source: value,
+  });
 
 const theme = useTheme();
 const appTheme = useAppTheme();
@@ -114,22 +119,24 @@ const appTheme = useAppTheme();
       }
     }
 
-    & > .feedback {
+    & .feedback {
       color: v-bind('appTheme.error.color');
     }
   }
 
   & > .label {
+    flex-shrink: 0;
     margin-bottom: 5px;
     flex: 0 0 v-bind('labelWidth');
     text-align: v-bind('labelAlign');
-    padding-right: 10px;
+    padding-right: 12px;
   }
 
-  .input-wrapper {
+  .feedback-wrapper {
     flex: 1 1 0;
     min-width: 0;
-
+  }
+  .input-wrapper {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -144,7 +151,7 @@ const appTheme = useAppTheme();
 
       padding: 8px 0;
       outline: none;
-      transition: border-color 0.2s ease-in-out;
+      transition: border-color 0.2s ease-in-out-out;
       background-color: transparent;
       background-image: none;
       -webkit-box-shadow: none;
@@ -159,12 +166,13 @@ const appTheme = useAppTheme();
       }
     }
 
-    &:hover,
-    &:focus {
+    &:hover {
       border-color: v-bind('appTheme.primary.color');
     }
 
-    &:focus {
+    &:focus-within {
+      border-color: v-bind('appTheme.primary.color');
+
       background-color: v-bind('theme.focus.backgroundColor');
     }
   }
@@ -173,11 +181,11 @@ const appTheme = useAppTheme();
     border-color: v-bind('appTheme.error.color');
 
     &:hover,
-    &:focus {
+    &:focus-within {
       border-color: v-bind('appTheme.error.color');
     }
 
-    &:focus {
+    &:focus-within {
       background-color: v-bind('appTheme.error.color + 22');
     }
   }
@@ -186,7 +194,7 @@ const appTheme = useAppTheme();
     opacity: 0.5;
 
     &:hover,
-    &:focus {
+    &:focus-within {
       border-color: v-bind('theme.borderColor');
     }
 
