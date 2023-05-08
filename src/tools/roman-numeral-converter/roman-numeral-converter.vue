@@ -15,13 +15,12 @@
     </c-card>
     <c-card title="Roman to arabic" mt-5>
       <n-space align="center" justify="space-between">
-        <n-form-item v-bind="validationRoman">
-          <n-input v-model:value="inputRoman" style="width: 200px" />
-        </n-form-item>
+        <c-input-text v-model:value="inputRoman" style="width: 200px" :validation="validationRoman" />
+
         <div class="result">
           {{ outputNumeral }}
         </div>
-        <c-button :disabled="validationRoman.validationStatus === 'error'" @click="copyArabic"> Copy </c-button>
+        <c-button :disabled="!validationRoman.isValid" @click="copyArabic"> Copy </c-button>
       </n-space>
     </c-card>
   </div>
@@ -55,7 +54,7 @@ const { attrs: validationNumeral } = useValidation({
 const inputRoman = ref('XLII');
 const outputNumeral = computed(() => romanToArabic(inputRoman.value));
 
-const { attrs: validationRoman } = useValidation({
+const validationRoman = useValidation({
   source: inputRoman,
   rules: [
     {
